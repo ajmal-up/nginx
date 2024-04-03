@@ -9,7 +9,7 @@ metadata:
   name: nginx-deployment
   namespace: nginx  # Specify the namespace here
 spec:
-  replicas: 3
+  replicas: 4
   selector:
     matchLabels:
       app: nginx
