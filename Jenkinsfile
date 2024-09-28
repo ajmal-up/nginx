@@ -5,6 +5,7 @@ pipeline {
         // Define environment variables
         SECRET_KEY = credentials('SECRET_KEY')
         SECRET_ACCESS_KEY = credentials('SECRET_ACCESS_KEY')
+        CREDENTIAL_ID = 'app-cluster'
         AWS_REGION = "us-east-1"
         REPOSITORY_URI = '850995554565.dkr.ecr.us-east-1.amazonaws.com/nginx'
         IMAGE_TAG = "${BUILD_NUMBER}"
@@ -47,10 +48,9 @@ pipeline {
         stage('Run the k8s deployment files') {
             steps {
                 script {
-                    sh """
-                    aws eks update-kubeconfig --region ${AWS_REGION} --name app-cluster-prod
-                    kubectl apply -f K8S/.
-                    """
+                    withKubeConfig(credentialsId: "${CREDENTIAL_ID}", serverUrl: '') {
+                    sh('kubectl apply -f K8S/.')
+                    }
                 }
             }
         
